@@ -12,11 +12,13 @@ let saveEL = document.getElementById("save-el")
 let countEl = document.getElementById("count-el")
 let totalEL = document.getElementById("total-el")
 let list = document.getElementById("list")
+let savedNotification = document.getElementById('saveNotify')
 
 //collections
 let savedCounts = []
 let dateLogs=[]
 let isChanged = false;
+
 
 function saveData(){
 
@@ -50,9 +52,6 @@ function saveData(){
 
 }
    
-
-
-
 
 
 let count = 0
@@ -90,12 +89,24 @@ function add(){
     countEl.textContent=0
 
     isChanged = true
+    hideSave()
 }
 
 function save() {
     if(savedCounts.length >0){
         saveData();
+        notifySave()
+
     }
+
+}
+
+function notifySave(){
+    savedNotification.style.visibility = 'visible';
+}
+
+function hideSave(){
+    savedNotification.style.visibility = 'hidden';
 
 }
 
@@ -129,6 +140,7 @@ function clearStorage(){
   
    
     removeChild(list)
+    hideSave()
     
 }
 
@@ -185,6 +197,6 @@ function populateUI(){
 
 
 window.onload = ()=>{
-
+    savedNotification.style.visibility = 'hidden'
     populateUI()
 }
