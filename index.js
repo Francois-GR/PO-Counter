@@ -13,10 +13,47 @@ let countEl = document.getElementById("count-el")
 let totalEL = document.getElementById("total-el")
 let list = document.getElementById("list")
 
-
-
-
+//collections
 let savedCounts = []
+let dateLogs=[]
+let isChanged = false;
+
+function saveData(){
+
+    //? see if previous data exists
+    let prevCounts = localStorage.getItem('counts')?.split(',')
+    let prevDateLogs = localStorage.getItem('logs')?.split(',')
+    //? if prev data exist then previous data should be appended to current new data
+
+    //? 
+    if(isChanged){
+        localStorage.clear();    
+        let countsToSave = prevCounts? [...prevCounts, ...savedCounts] : [...savedCounts]
+        let datesToSave = prevDateLogs? [...prevDateLogs,...dateLogs] : [...dateLogs]
+        
+        localStorage.setItem('counts', countsToSave)
+        localStorage.setItem('logs', datesToSave)
+        
+        let currentCount = localStorage.getItem('counts')?.split(',').map((e)=>+e)
+        let currentDates = localStorage.getItem('logs').split(',')
+    
+        savedCounts = currentCount? [...currentCount] : []
+        dateLogs = currentDates? [...currentDates] : []
+        isChanged = false;
+    }
+
+    
+    
+
+    
+
+
+}
+   
+
+
+
+
 
 let count = 0
 
@@ -28,42 +65,47 @@ countEl.textContent = count
 
 }
 
-
-function save() {
-
+function add(){
     let currentDate = new Date()
 
 
 
     let el = document.createElement("li")
 
-    console.log(el)
+
 
     savedCounts.push(count)
 
     let hours = currentDate.getHours()
-    let minuts =  currentDate.getMinutes();
-  
-    
+    let minutes =  currentDate.getMinutes()<10?'0'+currentDate.getMinutes():currentDate.getMinutes()
 
+    dateLogs.push(`${hours}:${minutes}`)
+   
 
+    el.textContent = `count = ${count} | time = ${hours}:${minutes} `
 
-    // el.textContent = `${count}: ${hours}:${minuts}`
-    el.textContent = `${count}: ${hours} : ${minuts<10?'0'+minuts:minuts} `
-
-    saveEL.appendChild(el)
+    list.appendChild(el)
  
     count = 0
+    countEl.textContent=0
 
+    isChanged = true
+}
 
+function save() {
+    if(savedCounts.length >0){
+        saveData();
+    }
 
 }
 
 
 function minus() {
+    if(count>0){
     count--
 
     countEl.textContent = count 
+    }
 
 }
 
@@ -78,3 +120,71 @@ function total(){
    totalEL.textContent = `TOTAL : ${sum}`
 }
 
+function clearStorage(){
+    localStorage.clear();
+    
+    savedCounts.length = 0;
+    dateLogs.length = 0;
+    
+  
+   
+    removeChild(list)
+    
+}
+
+function removeChild(node){
+    //recursive function, read about it
+
+    if(node.children.length === 0 ){
+       
+        return
+    }
+
+    node.childNodes.forEach(e=>{
+        e.remove()
+    })
+    removeChild(node)
+
+
+    
+}
+
+function populateUI(){
+
+    
+   
+    removeChild(list)
+    
+    
+
+    let counts = localStorage.getItem('counts')?.split(',')
+
+    let dates = localStorage.getItem('logs')?.split(',')
+
+        
+    if(counts && dates){
+        
+       
+        
+        
+        let listElement 
+        for(let i = 0; i<counts.length; i++){
+            listElement = document.createElement('li')
+            let split = dates[i]?.split(':')
+            listElement.textContent = `count = ${counts[i]} | time = ${split[0]}:${split[1]}`
+            list.appendChild(listElement)
+
+            savedCounts.push(+counts[i])
+         
+            
+        }
+    }
+    
+}
+   
+
+
+window.onload = ()=>{
+
+    populateUI()
+}

@@ -54,6 +54,14 @@ button {
     background: orchid;
 }
 
+#clear-btn {
+    background: red;
+}
+
+#add-btn {
+    background-color: chocolate;
+}
+
 #save-el {
     font-weight: bold;
     vertical-align: middle;
