@@ -90,6 +90,12 @@ function add(){
 
     isChanged = true
     hideSave()
+
+    total()
+    
+
+
+
 }
 
 function save() {
@@ -98,6 +104,8 @@ function save() {
         notifySave()
 
     }
+    
+savedCounts = 0
 
 }
 
@@ -120,7 +128,7 @@ function minus() {
 
 }
 
-function total(){
+function total() {
     let sum = 0
     
     //counting values 
